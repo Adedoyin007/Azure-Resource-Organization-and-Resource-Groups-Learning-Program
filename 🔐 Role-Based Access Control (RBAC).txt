@@ -1,0 +1,142 @@
+🔐 Role-Based Access Control (RBAC) – Advanced Analysis
+
+📌 RBAC Architecture Overview
+
+The RBAC configuration in this project follows a hierarchical access model, where permissions are applied at different scopes:
+
+Subscription (Global Scope)
+   └── Resource Group (Environment Scope)
+         └── Resources (VMs, Networking, etc.)
+
+* Permissions assigned at the subscription level apply to all resource groups
+* Permissions at the resource group level override or refine access within that scope
+
+⸻
+
+📌 Implemented Role Structure
+
+🔹 Subscription Scope
+
+* Owner (2 assignments)
+    * Full administrative control across all environments
+    * Includes permission to assign roles and manage access
+
+⸻
+
+🔹 Resource Group Scope
+
+Production (prod-api-rg-eastus)
+
+* Contributor (resource management)
+* RBAC Administrator (access control management)
+
+Development (dev-webapp-rg-eastus)
+
+* RBAC Administrator (access control management only)
+
+⸻
+
+📌 Security Model Interpretation
+
+Although implemented using a single identity, the structure reflects a separation of responsibilities model:
+
+Function	Role	Responsibility
+Full Control	Owner	Governance and global administration
+Resource Management	Contributor	Deploy and manage infrastructure
+Access Control	RBAC Administrator	Manage permissions and security
+
+This aligns with enterprise RBAC design principles, where duties are logically separated even if not enforced across multiple users.
+
+⸻
+
+📌 Principle of Least Privilege (Analysis)
+
+The configuration partially demonstrates the Principle of Least Privilege (PoLP):
+
+* Contributor role is scoped only to a specific resource group
+* RBAC Administrator is separated from resource modification permissions
+
+However:
+
+* Owner role at subscription level grants unrestricted access
+* Since all roles are assigned to the same user, effective privilege is not restricted
+
+⸻
+
+📌 Risk Assessment
+
+From a security perspective:
+
+✔ Strengths
+
+* Correct use of built-in Azure roles
+* Proper scoping of permissions
+* Logical separation of duties (conceptually)
+
+⚠ Risks
+
+* Single point of control (one user holds all roles)
+* No protection for production environment
+* No enforcement of least privilege in practice
+
+⸻
+
+📌 Real-World Alignment
+
+In a production environment, this architecture would typically be extended as follows:
+
+Team	Recommended Role	Scope
+Development Team	Contributor	Dev Resource Group
+Operations Team	Contributor	Production Resource Group
+Security Team	RBAC Administrator	All Resource Groups
+Auditors	Reader	Production
+
+This ensures:
+
+* Controlled access to sensitive environments
+* Reduced risk of accidental changes
+* Clear accountability
+
+⸻
+
+📌 Governance & Best Practices
+
+To align with Azure best practices, the following improvements are recommended:
+
+1. Use Azure AD Groups
+    * Assign roles to groups instead of individuals
+2. Limit Owner Role Usage
+    * Restrict Owner role to emergency/admin accounts only
+3. Introduce Read-Only Access
+    * Apply Reader role for monitoring and auditing
+4. Separate Environments Strictly
+    * Dev/Test → flexible access
+    * Production → restricted access
+
+⸻
+
+📌 Key Learning Outcomes
+
+This implementation demonstrates:
+
+* How RBAC roles are applied across different scopes
+* The relationship between roles and permissions
+* The importance of access separation in cloud security
+
+It also highlights a critical insight:
+
+Proper RBAC design is not just about assigning roles, but about who gets those roles and at what scope.
+
+⸻
+
+🧠 Final Evaluation
+
+The RBAC configuration is:
+
+* ✅ Technically correct
+* ✅ Properly scoped
+* ✅ Aligned with Azure fundamentals
+
+However, it remains a single-user administrative model, which limits real-world security enforcement.
+
+With minor adjustments (multi-user roles and stricter access control), this design can scale to a production-ready RBAC architecture.
